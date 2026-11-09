@@ -107,4 +107,4 @@ render.yaml
 
 ## Current phase
 
-Phase 1 — Domain core (not started)
+Phase 2 — Identity (not started)

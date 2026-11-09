@@ -1,0 +1,27 @@
+# secrets
+.env
+.env.local
+.env.demo
+.env*.local
+
+# deps / build
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# misc
+.DS_Store
+*.log
+
+# firebase service account
+firebase-sa.json
+*-firebase-adminsdk-*.json
+
+# Prisma generated client (run npm run db:generate to rebuild)
+src/generated/
+.prisma/
+
+# TypeScript incremental build info
+*.tsbuildinfo

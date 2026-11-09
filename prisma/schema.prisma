@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Auth.js v5 ──────────────────────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          UserRole  @default(CUSTOMER)
+  phoneVerified Boolean   @default(false)
+  phoneNumber   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  tailorOrders   Order[]      @relation("TailorOrders")
+  customerOrders Order[]      @relation("CustomerOrders")
+  sentMessages   Message[]
+  events         OrderEvent[]
+  photos         Photo[]
+}
+
+model Account {
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([provider, providerAccountId])
+}
+
+model Session {
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@id([identifier, token])
+}
+
+// ── Domain ──────────────────────────────────────────────────────────────────
+
+model Order {
+  id              String     @id @default(cuid())
+  tailorId        String
+  customerId      String
+  state           OrderState @default(DRAFT)
+  totalCents      Int        @default(0)
+  discountApplied Boolean    @default(false)
+  discountBps     Int        @default(1000)
+  checkRound      Int        @default(0)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  tailor   User @relation("TailorOrders", fields: [tailorId], references: [id])
+  customer User @relation("CustomerOrders", fields: [customerId], references: [id])
+
+  events            OrderEvent[]
+  checklistVersions ChecklistVersion[]
+  payments          Payment[]
+  messages          Message[]
+  photos            Photo[]
+}
+
+model OrderEvent {
+  id        String      @id @default(cuid())
+  orderId   String
+  fromState OrderState?
+  toState   OrderState
+  actorId   String?
+  note      String?
+  createdAt DateTime    @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+  actor User? @relation(fields: [actorId], references: [id])
+}
+
+model ChecklistVersion {
+  id               String   @id @default(cuid())
+  orderId          String
+  version          Int
+  items            Json
+  tailorAccepted   Boolean  @default(false)
+  customerAccepted Boolean  @default(false)
+  createdAt        DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id])
+
+  @@unique([orderId, version])
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  orderId               String
+  type                  PaymentType   @default(BASE)
+  paypalOrderId         String?
+  paypalAuthorizationId String?
+  paypalCaptureId       String?
+  amountCents           Int
+  status                PaymentStatus @default(PENDING)
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  order Order @relation(fields: [orderId], references: [id])
+}
+
+model Message {
+  id        String      @id @default(cuid())
+  orderId   String
+  senderId  String?
+  role      MessageRole
+  content   String      @db.Text
+  createdAt DateTime    @default(now())
+
+  order  Order @relation(fields: [orderId], references: [id])
+  sender User? @relation(fields: [senderId], references: [id])
+}
+
+model Photo {
+  id          String   @id @default(cuid())
+  orderId     String
+  uploaderId  String
+  storagePath String
+  round       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  order    Order @relation(fields: [orderId], references: [id])
+  uploader User  @relation(fields: [uploaderId], references: [id])
+}
+
+// ── Enums ───────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  TAILOR
+  CUSTOMER
+}
+
+enum OrderState {
+  DRAFT
+  PROPOSED
+  AGREED
+  AUTHORIZED
+  IN_PROGRESS
+  SUBMITTED
+  CHECK_FAILED
+  CHECK_PASSED
+  SHIPPED
+  RELEASED
+  CANCELLED
+  VOIDED
+  DISPUTED
+}
+
+enum PaymentType {
+  BASE
+  ADDON
+}
+
+enum PaymentStatus {
+  PENDING
+  AUTHORIZED
+  CAPTURED
+  VOIDED
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}

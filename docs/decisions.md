@@ -45,3 +45,4 @@ DRAFT -> PROPOSED -> AGREED -> AUTHORIZED -> IN_PROGRESS -> SUBMITTED -> (CHECK_
 - Reversible: all provider code in src/server/ai/client.ts; switching back to Claude = that file + env vars.
 - 2026-11-09 key test: gemini-3.5-flash-lite OK; gemini-3.8-flash returned 503 (server overloaded, not a quota error). Added GEMINI_MODEL_VISION_FALLBACK=gemini-3.6-flash, used automatically on 503/429.
 - 2026-11-09: GitHub repo created: https://github.com/gsaikalyan2-coder/stitchsafe (public, empty).
+- 2026-11-09: Deployment deferred to Phase 7 (user decision). Phases 0-6 are verified locally on http://127.0.0.1:3000 with the dev Supabase project. Phase 7 does the first Render deploy (Singapore, demo Supabase), then sets the Render URL in PayPal return URL, Firebase authorized domains, AUTH_URL, and GitHub secrets for the cron. Until then the reauthorize/auto-capture cron is tested by calling POST /api/cron/reauthorize locally.

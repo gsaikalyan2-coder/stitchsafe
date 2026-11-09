@@ -14,14 +14,14 @@ Run ONE phase only. Never start the next phase in the same run.
 
 | N | Goal | Done when |
 |---|---|---|
-| 0 | Foundation: Next.js 16 scaffold (src/, no Cache Components), MIT license, .env.example, Prisma 7 schema + prisma.config.ts, Supabase DB + bucket, render.yaml, /api/health, git init | /api/health returns 200 on Render; migrations applied on Supabase |
+| 0 | Foundation: Next.js 16 scaffold (src/, no Cache Components), MIT license, .env.example, Prisma 7 schema + prisma.config.ts, Supabase DB + bucket, render.yaml, /api/health, git init | /api/health returns 200 locally (http://127.0.0.1:3000); migrations applied on Supabase dev |
 | 1 | Domain core: pricing.ts, orderMachine.ts, versioning.ts + Vitest | every transition and total passes Vitest; no I/O in src/domain |
 | 2 | Identity: Resend magic link first, Log in with PayPal (2-hour timebox), Firebase phone code, roles + short profile | two seeded users log in and show verified badges |
 | 3 | Payments: PayPal token cache, create (AUTHORIZE), authorize, capture, void, reauthorize, PayPal-Request-Id, button, cron endpoint | `npm run paypal:smoke` runs authorize→capture and authorize→void with IDs stored |
 | 4 | AI: checklist builder, change writer, photo checker, receipt writer; Zod + 1 retry + NEEDS_MANUAL_REVIEW | fixture contract tests pass; live calls work on 3 sample chats |
-| 5 | Full flow + UI: order pages, checklist review/accept, upload, verdict, ship, fit confirmation, receipt timeline | one full order chat → released payment in sandbox on the hosted URL |
-| 6 | Winning features: add-on v2 + diff + counters + second authorization; polling chat; light trust page | each feature works on the hosted URL and can be shown in the video |
-| 7 | Ship: seed demo data, README, Postman collection, final deploy | fresh-browser run on hosted URL passes; submission assets ready |
+| 5 | Full flow + UI: order pages, checklist review/accept, upload, verdict, ship, fit confirmation, receipt timeline | one full order chat → released payment in sandbox locally (http://127.0.0.1:3000) |
+| 6 | Winning features: add-on v2 + diff + counters + second authorization; polling chat; light trust page | each feature works locally and can be shown in the video |
+| 7 | Ship: FIRST Render deploy (demo Supabase), add Render URL to PayPal return URL + Firebase authorized domains + AUTH_URL + GitHub secrets (CRON_SECRET, APP_URL), seed demo data, README, Postman collection | fresh-browser run on the Render URL passes; submission assets ready |
 
 ## Step 1: Load context (read, do not skim)
 

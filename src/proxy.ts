@@ -1,3 +1,38 @@
-// Next.js 16 uses src/proxy.ts (Node runtime) instead of middleware.ts.
-// Phase 2 will implement Auth.js session-based route protection here.
-export function proxy() {}
+import { auth } from "@/server/auth/auth"
+import { NextResponse } from "next/server"
+import type { NextRequest } from "next/server"
+
+export const config = {
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)"],
+}
+
+const PUBLIC_PATHS = ["/login", "/api/auth"]
+
+export async function proxy(req: NextRequest): Promise<NextResponse | undefined> {
+  const { pathname } = req.nextUrl
+
+  // A signed-in user must never start another provider sign-in from /login: Auth.js would
+  // LINK that provider (e.g. PayPal) to the CURRENT user instead of signing in someone else.
+  if (pathname === "/login") {
+    const current = await auth()
+    if (current?.user) {
+      const dashboardUrl = req.nextUrl.clone()
+      dashboardUrl.pathname = "/dashboard"
+      dashboardUrl.search = ""
+      return NextResponse.redirect(dashboardUrl)
+    }
+    return undefined
+  }
+
+  const isPublic = PUBLIC_PATHS.some((p) => pathname.startsWith(p))
+  if (isPublic) return undefined
+
+  const session = await auth()
+  if (!session?.user) {
+    const loginUrl = req.nextUrl.clone()
+    loginUrl.pathname = "/login"
+    return NextResponse.redirect(loginUrl)
+  }
+
+  return undefined
+}

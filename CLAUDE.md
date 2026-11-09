@@ -40,7 +40,7 @@ IMPORTANT: rules 1-6 protect money flows. If a task seems to need breaking one, 
 - Prisma 7: `migrate dev` does not run `generate` or seed. Run `npm run db:generate` after every schema change.
 - `NEXT_PUBLIC_*` values are inlined at build time; on Render they must exist before the build.
 - Gemini: call `ai.models.generateContent` with `config.responseMimeType: "application/json"` and `config.responseJsonSchema` built from `z.toJSONSchema(Schema)`, then `Schema.parse(JSON.parse(response.text))`. Treat a block/SAFETY/MAX_TOKENS finish or a parse failure like a bad output: retry once, then NEEDS_MANUAL_REVIEW. Images go as `inlineData` base64 JPEG after server download, EXIF strip and resize (long edge <= 1568 px). Free tier: low rate limits (check AI Studio) and Google may use inputs to improve its products, so only sample photos. Verify SDK shapes against current ai.google.dev docs before writing Phase 4 code.
-- Firebase phone auth does not work on `localhost`; use `http://127.0.0.1:3000` locally.
+- Local dev URL is ALWAYS `http://localhost:3000` (run `npm run dev`, no `-H`). Next.js 16 normalises localhost to `localhost` in `NextRequest.url`, so Auth.js builds `redirect_uri` with localhost; PayPal's Log in with PayPal return URL is registered as `http://localhost:3000/api/auth/callback/paypal`. Never use localhost.
 - Resend without a verified domain only delivers to the Resend account owner's email. Render free blocks SMTP ports; always use the Resend HTTPS API.
 
 ## Layout
@@ -71,7 +71,7 @@ render.yaml
 
 ## Commands
 
-- `npm run dev`: local app at http://127.0.0.1:3000
+- `npm run dev`: local app at http://localhost:3000
 - `npm run typecheck`: `tsc --noEmit`
 - `npm test`: Vitest (`vitest run --passWithNoTests`)
 - `npm run lint`: eslint CLI
@@ -107,4 +107,4 @@ render.yaml
 
 ## Current phase
 
-Phase 2 — Identity (not started)
+Phase 3 — Payments (not started)

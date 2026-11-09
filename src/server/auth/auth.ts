@@ -13,8 +13,8 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
       from: process.env.EMAIL_FROM ?? "noreply@stitchsafe.dev",
     }),
     PayPalProvider({
-      clientId: process.env.PAYPAL_CLIENT_ID!,
-      clientSecret: process.env.PAYPAL_CLIENT_SECRET!,
+      clientId: process.env.PAYPAL_LOGIN_CLIENT_ID!,
+      clientSecret: process.env.PAYPAL_LOGIN_CLIENT_SECRET!,
     }),
   ],
   session: { strategy: "database" },

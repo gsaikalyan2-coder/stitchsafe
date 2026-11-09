@@ -35,6 +35,10 @@ services:
         sync: false
       - key: PAYPAL_CLIENT_SECRET
         sync: false
+      - key: PAYPAL_LOGIN_CLIENT_ID
+        sync: false
+      - key: PAYPAL_LOGIN_CLIENT_SECRET
+        sync: false
       - key: PAYPAL_API_BASE
         value: https://api-m.sandbox.paypal.com
       - key: PAYPAL_WEB_BASE

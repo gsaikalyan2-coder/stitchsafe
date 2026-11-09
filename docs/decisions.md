@@ -48,3 +48,23 @@ DRAFT -> PROPOSED -> AGREED -> AUTHORIZED -> IN_PROGRESS -> SUBMITTED -> (CHECK_
 - 2026-11-09: Deployment deferred to Phase 7 (user decision). Phases 0-6 are verified locally on http://127.0.0.1:3000 with the dev Supabase project. Phase 7 does the first Render deploy (Singapore, demo Supabase), then sets the Render URL in PayPal return URL, Firebase authorized domains, AUTH_URL, and GitHub secrets for the cron. Until then the reauthorize/auto-capture cron is tested by calling POST /api/cron/reauthorize locally.
 - 2026-11-09: Local dev URL switched from 127.0.0.1 to localhost. Diagnosis: Next.js 16 NextURL normalises 127.0.0.1 to 'localhost' in request.url (seen via a temporary debug route: host header 127.0.0.1:3000 but req.url http://localhost:3000), so Auth.js sent redirect_uri=http://localhost:3000/api/auth/callback/paypal. Fix: AUTH_URL=http://localhost:3000, PayPal Log in return URL = http://localhost:3000/api/auth/callback/paypal, run `npm run dev` without -H. Firebase authorises localhost by default.
 - 2026-11-09: Fixed test data: sandbox buyer's PayPal account (ADZVTL527EUQY) had been linked to the tailor because the tailor was signed in when PayPal login ran; moved to the customer. Guard added: /login redirects signed-in users to /dashboard. Test each role in a separate browser profile/Incognito window and sign out between roles.
+
+## 2026-11-09 — Authorization lifecycle dates (open question #37)
+- Decision: tailor's delivery deadline = day 18 of the authorization. This guarantees the 7-day customer fit window ends by day 25.
+- Cron auto-capture rule for a SHIPPED order: capture when (shippedAt + 7 days has passed AND authorization age >= 25 days) AND fitConfirmedAt IS NULL AND state != DISPUTED.
+- Emergency capture: if authorization age reaches 28 days on a SHIPPED order before the 7-day window closes, capture anyway and log "day-28 emergency capture before authorization expiry".
+- Honor period: 3 days from authorizedAt (or from reauthorizedAt after a reauthorization). Cron reauthorizes after day 3 and before day 29.
+- Maximum one reauthorization per payment (reauthorizedAt tracks this).
+
+## Decision #38 — PayPal sandbox account geography (2026-11-09)
+- Original sandbox business account was IN (India). PayPal IN sellers cannot receive USD; IN-to-IN sandbox buyer transactions were also blocked.
+- Switched to new sandbox app "StitchSafe US" linked to a US sandbox business account.
+- Sandbox buyer for smoke tests: `sb-blw4d53813648` (US personal account).
+- All PayPal env vars (`PAYPAL_CLIENT_ID`, `PAYPAL_CLIENT_SECRET`) now reference the US app credentials.
+
+## Decision #39 — Split PayPal credentials (2026-11-09)
+- PayPal does not allow enabling "Log in with PayPal" (LIPP) on the new US sandbox app (dashboard save error 4d4db2051afef).
+- Solution: use two separate PayPal app credentials.
+  - `PAYPAL_LOGIN_CLIENT_ID` / `PAYPAL_LOGIN_CLIENT_SECRET` — old "StitchSafe" app (IN merchant). Used only by `src/server/auth/auth.ts` for OAuth sign-in. LIPP return URL: `http://localhost:3000/api/auth/callback/paypal`.
+  - `PAYPAL_CLIENT_ID` / `PAYPAL_CLIENT_SECRET` — new "StitchSafe US" app (US merchant). Used by `src/server/paypal/**` (orders, authorize, capture, void) and `NEXT_PUBLIC_PAYPAL_CLIENT_ID` (JS SDK button).
+- The two apps never interact at runtime; each has its own token cache in `src/server/paypal/client.ts`.

@@ -80,6 +80,8 @@ model Order {
   discountApplied Boolean    @default(false)
   discountBps     Int        @default(1000)
   checkRound      Int        @default(0)
+  shippedAt       DateTime?
+  fitConfirmedAt  DateTime?
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
 
@@ -99,6 +101,8 @@ model OrderEvent {
   fromState OrderState?
   toState   OrderState
   actorId   String?
+  type      String      @default("STATE_CHANGE")
+  payload   Json?
   note      String?
   createdAt DateTime    @default(now())
 
@@ -129,6 +133,14 @@ model Payment {
   paypalCaptureId       String?
   amountCents           Int
   status                PaymentStatus @default(PENDING)
+  authorizedAt          DateTime?
+  honorUntil            DateTime?
+  expiresAt             DateTime?
+  reauthorizedAt        DateTime?
+  capturedAt            DateTime?
+  voidedAt              DateTime?
+  lastPaypalStatus      String?
+  authorizationHistory  Json          @default("[]")
   createdAt             DateTime      @default(now())
   updatedAt             DateTime      @updatedAt
 
@@ -192,6 +204,8 @@ enum PaymentStatus {
   AUTHORIZED
   CAPTURED
   VOIDED
+  DENIED
+  FAILED
 }
 
 enum MessageRole {

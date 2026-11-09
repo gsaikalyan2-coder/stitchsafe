@@ -6,7 +6,7 @@ export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|webp|ico)$).*)"],
 }
 
-const PUBLIC_PATHS = ["/login", "/api/auth"]
+const PUBLIC_PATHS = ["/login", "/api/"]
 
 export async function proxy(req: NextRequest): Promise<NextResponse | undefined> {
   const { pathname } = req.nextUrl

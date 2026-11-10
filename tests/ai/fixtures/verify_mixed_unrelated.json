@@ -1,0 +1,31 @@
+{
+  "photoAssessments": [
+    {
+      "imageRef": "Image 1",
+      "unrelated": true,
+      "unrelatedReason": "Photo shows a coffee cup"
+    },
+    {
+      "imageRef": "Image 2",
+      "unrelated": false,
+      "unrelatedReason": ""
+    }
+  ],
+  "verdicts": [
+    {
+      "itemId": "fabric_color",
+      "verdict": "MET",
+      "evidence": "White cotton fabric visible in Image 2",
+      "imageRefs": ["Image 2"],
+      "feedbackForTailor": ""
+    },
+    {
+      "itemId": "collar_type",
+      "verdict": "PARTLY_MET",
+      "evidence": "Collar shape is close but slightly different from mandarin style",
+      "imageRefs": ["Image 2"],
+      "feedbackForTailor": "Please check collar shape matches the agreed mandarin style"
+    }
+  ],
+  "notes": "One photo was unrelated; grading based on remaining photo."
+}

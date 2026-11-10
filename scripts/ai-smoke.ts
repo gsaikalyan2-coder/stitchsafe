@@ -17,8 +17,12 @@ const PHOTOS_DIR = join(SAMPLES_DIR, "photos");
 
 function printResult(result: unknown) {
   if (result && typeof result === "object" && "status" in result) {
-    const r = result as { status: string; reason: string };
-    console.log(`  ⚠ NEEDS_MANUAL_REVIEW: ${r.reason}`);
+    const r = result as { status: string; reason?: string; reasons?: string[] };
+    if (r.status === "PHOTOS_REJECTED_UNRELATED") {
+      console.log(`  ✗ PHOTOS_REJECTED_UNRELATED: ${(r.reasons ?? []).join("; ")}`);
+    } else {
+      console.log(`  ⚠ NEEDS_MANUAL_REVIEW: ${r.reason}`);
+    }
   } else {
     console.log("  ✓", JSON.stringify(result, null, 2).split("\n").slice(0, 20).join("\n  "));
   }
@@ -72,7 +76,11 @@ ${"─".repeat(60)}`);
   const photo = readFileSync(join(PHOTOS_DIR, photoFile));
   const result = await verifyPhotos(checklistItems, [photo]);
   if ("status" in result) {
-    console.log(`  ⚠ NEEDS_MANUAL_REVIEW: ${result.reason}`);
+    if (result.status === "PHOTOS_REJECTED_UNRELATED") {
+      console.log(`  ✗ PHOTOS_REJECTED_UNRELATED: ${(result as { reasons: string[] }).reasons.join("; ")}`);
+    } else {
+      console.log(`  ⚠ NEEDS_MANUAL_REVIEW: ${(result as { reason: string }).reason}`);
+    }
   } else {
     if (result.photoAssessments) {
       for (const pa of result.photoAssessments) {

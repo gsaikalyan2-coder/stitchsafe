@@ -5,6 +5,7 @@
 | 1 | Add-on funding | Separate PayPal order + authorization for the add-on amount only. Order has many Payments. |
 | 2 | Payee | Platform sandbox merchant receives funds. Tailor payout (Payouts API) = future work. |
 | 3 | Photo verdict | Any PARTLY_MET or NOT_MET blocks capture. Tailor gets 2 re-upload rounds, then customer chooses accept-anyway or cancel (void). |
+| 13 | Unrelated photos | An upload where every photo is flagged unrelated to the ordered garment is REJECTED. The order stays in its current state (IN_PROGRESS or CHECK_FAILED), the tailor is asked to re-upload, and it does NOT count as one of the 2 re-upload rounds. It must NOT become NEEDS_MANUAL_REVIEW and must NOT become CHECK_FAILED. It never captures, voids or changes a total. Append an OrderEvent PHOTOS_REJECTED_UNRELATED (with unrelatedReason) so the dispute evidence pack shows it. |
 | 4 | Silent customer | After SHIPPED, customer has 7 days to confirm fit. If not, server auto-captures on day 25 of the authorization unless a problem is reported. |
 | 5 | Cancellation | Cancel voids all live authorizations. Milestone payments = future work. |
 | 6 | Report a problem | Order -> DISPUTED; blocks capture and void; shows timeline. Resolver = future work. |

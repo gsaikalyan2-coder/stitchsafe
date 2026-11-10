@@ -5,14 +5,14 @@ import { generateJson, VISION_MODEL } from "./client";
 import { prepareImage, imageToInlineData } from "./images";
 import type { NeedsReview } from "./client";
 import { VerifySchema } from "./schemas";
-import type { VerifyOutput, ChecklistItem } from "./schemas";
+import type { VerifyOutput, ChecklistItem, PhotosRejectedUnrelated } from "./schemas";
 
 const PROMPT = readFileSync(join(__dirname, "prompts/verify.txt"), "utf8");
 
 export async function verifyPhotos(
   checklistItems: ChecklistItem[],
   photos: Buffer[],
-): Promise<VerifyOutput | NeedsReview> {
+): Promise<VerifyOutput | NeedsReview | PhotosRejectedUnrelated> {
   // Only grade photo-verifiable items; "fit" items are confirmed at the fit step
   const photoItems = checklistItems.filter((i) => i.checkMethod === "photo");
 
@@ -40,13 +40,13 @@ export async function verifyPhotos(
 
   if ("status" in result) return result;
 
-  // Business check: reject uploads where all photos are unrelated
+  // Business check: reject uploads where all photos are unrelated (decision #13)
   const allUnrelated = result.photoAssessments.length > 0 &&
     result.photoAssessments.every((pa) => pa.unrelated);
   if (allUnrelated) {
     return {
-      status: "NEEDS_MANUAL_REVIEW",
-      reason: "all uploaded photos are unrelated to the ordered garment",
+      status: "PHOTOS_REJECTED_UNRELATED",
+      reasons: result.photoAssessments.map((pa) => pa.unrelatedReason),
     };
   }
 

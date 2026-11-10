@@ -87,6 +87,7 @@ render.yaml
 
 - CHECK_FAILED -> SUBMITTED on re-upload, at most 2 re-upload rounds; then the customer chooses accept-anyway (-> CHECK_PASSED) or cancel (-> VOIDED).
 - Any PARTLY_MET or NOT_MET verdict blocks capture.
+- All-unrelated photo upload -> rejected, no state change, does not count as a re-upload round (see decisions.md).
 - Side exits: CANCELLED (before any authorization), VOIDED (cancel after authorization: void every live authorization), DISPUTED (report a problem: blocks capture and void).
 - Capture every live authorization (original + add-on) after SHIPPED + customer fit confirmation, or by the cron auto-capture rule in `docs/decisions.md`.
 

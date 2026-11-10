@@ -1,0 +1,16 @@
+{
+  "photoAssessments": [
+    {
+      "imageRef": "Image 1",
+      "unrelated": true,
+      "unrelatedReason": "Photo shows a landscape, not a garment"
+    },
+    {
+      "imageRef": "Image 2",
+      "unrelated": true,
+      "unrelatedReason": "Photo shows food on a plate"
+    }
+  ],
+  "verdicts": [],
+  "notes": "No photos appear to show the ordered garment."
+}

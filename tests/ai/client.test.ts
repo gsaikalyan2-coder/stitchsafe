@@ -17,6 +17,11 @@ const MockApiError = class extends Error {
   }
 };
 
+vi.mock("../../src/server/ai/images", () => ({
+  prepareImage: vi.fn(async () => "ZmFrZS1iYXNlNjQ="),
+  imageToInlineData: vi.fn((b64: string) => ({ inlineData: { mimeType: "image/jpeg", data: b64 } })),
+}));
+
 vi.mock("@google/genai", () => ({
   // Must be a real constructor (not arrow fn) so 'new GoogleGenAI()' works
   GoogleGenAI: vi.fn(function(this: unknown) {
@@ -273,6 +278,53 @@ describe("generateJson", () => {
     const result = await writeChange(previousItems, "change fabric to material");
     expect(result).toMatchObject({ status: "NEEDS_MANUAL_REVIEW" });
     expect((result as { reason: string }).reason).toMatch(/wording-only/i);
+  });
+
+  it("verifyPhotos returns PHOTOS_REJECTED_UNRELATED when all photos are unrelated", async () => {
+    const fixture = JSON.parse(
+      require("fs").readFileSync(
+        require("path").join(__dirname, "../ai/fixtures/verify_all_unrelated.json"),
+        "utf8",
+      ),
+    );
+    mockGenerateContent.mockResolvedValue(
+      makeOkResponse(JSON.stringify(fixture)),
+    );
+    const { verifyPhotos } = await import("../../src/server/ai/verify");
+    const items = [
+      { id: "fabric_color", label_en: "White cotton", label_local: "White cotton", local_lang: "en" as const, source_quote: "white", checkMethod: "photo" as const },
+      { id: "collar_type", label_en: "Mandarin collar", label_local: "Mandarin collar", local_lang: "en" as const, source_quote: "mandarin", checkMethod: "photo" as const },
+    ];
+    const result = await verifyPhotos(items, [Buffer.from("fake-photo")]);
+    expect(result).toMatchObject({ status: "PHOTOS_REJECTED_UNRELATED" });
+    expect((result as { reasons: string[] }).reasons).toHaveLength(2);
+    expect((result as { reasons: string[] }).reasons[0]).toMatch(/landscape/i);
+  });
+
+  it("verifyPhotos grades normally when one photo is unrelated but another is related", async () => {
+    const fixture = JSON.parse(
+      require("fs").readFileSync(
+        require("path").join(__dirname, "../ai/fixtures/verify_mixed_unrelated.json"),
+        "utf8",
+      ),
+    );
+    mockGenerateContent.mockResolvedValue(
+      makeOkResponse(JSON.stringify(fixture)),
+    );
+    const { verifyPhotos } = await import("../../src/server/ai/verify");
+    const items = [
+      { id: "fabric_color", label_en: "White cotton", label_local: "White cotton", local_lang: "en" as const, source_quote: "white", checkMethod: "photo" as const },
+      { id: "collar_type", label_en: "Mandarin collar", label_local: "Mandarin collar", local_lang: "en" as const, source_quote: "mandarin", checkMethod: "photo" as const },
+    ];
+    const result = await verifyPhotos(items, [Buffer.from("fake1"), Buffer.from("fake2")]);
+    // Should NOT be rejected — should return normal VerifyOutput with verdicts
+    expect("status" in result).toBe(false);
+    expect("verdicts" in result).toBe(true);
+    if ("verdicts" in result) {
+      expect(result.verdicts).toHaveLength(2);
+      expect(result.verdicts[0].verdict).toBe("MET");
+      expect(result.verdicts[1].verdict).toBe("PARTLY_MET");
+    }
   });
 
   it("ChecklistItemSchema requires checkMethod field", async () => {

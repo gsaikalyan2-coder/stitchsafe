@@ -77,6 +77,13 @@ export const VerifySchema = z.object({
 export type VerifyOutput = z.infer<typeof VerifySchema>;
 export type PhotoAssessment = z.infer<typeof PhotoAssessmentSchema>;
 
+// Distinct outcome when all uploaded photos are unrelated to the garment.
+// Data only — no money movement, no state change. orderService handles the rest.
+export type PhotosRejectedUnrelated = {
+  status: "PHOTOS_REJECTED_UNRELATED";
+  reasons: string[];
+};
+
 // ── Receipt ──────────────────────────────────────────────────────────────────
 
 export const ReceiptSchema = z.object({

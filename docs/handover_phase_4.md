@@ -95,9 +95,17 @@ Build the full order flow UI: order pages, checklist review/accept, photo upload
 - `verify.ts` now filters to `checkMethod === "photo"` items only; "fit" items are never sent to Gemini. The customer confirms fit items at the fit step after delivery.
 - `ChecklistItemSchema` now requires `checkMethod: "photo" | "fit"`. All fixtures updated. Measurements (chest, length, sleeve, etc.) are always `checkMethod: "fit"`.
 
+### Policy: unrelated photo rejection (decision #13, added 2026-11-10)
+- `verify.ts` now returns `{ status: "PHOTOS_REJECTED_UNRELATED", reasons: string[] }` when every uploaded photo is flagged unrelated. This is data only — no state change, no money movement in AI code.
+- `NEEDS_MANUAL_REVIEW` is reserved for AI failures (parse, safety, retry exhausted).
+- Phase 5 must implement in `orderService`:
+  1. When `verifyPhotos` returns `PHOTOS_REJECTED_UNRELATED`: do NOT transition state, do NOT increment `checkRound`, append `OrderEvent` with type `PHOTOS_REJECTED_UNRELATED` and payload `{ reasons }`, return message to tailor: "Photos don't show the ordered garment — please re-upload."
+  2. Customer fit confirmation for every `checkMethod="fit"` item before capture.
+  3. Capture gate = `SHIPPED` + all photo items `MET` (or customer accept-anyway after 2 re-upload rounds) + all fit items confirmed + no `DISPUTED`.
+
 ### Commands
 - `npm run dev` — local at http://localhost:3000
 - `npm run typecheck` — 0 errors expected
-- `npm test` — 155 tests expected
+- `npm test` — 157 tests expected
 - `npm run ai:smoke` — live Gemini call (requires GEMINI_API_KEY)
 - `npm run paypal:smoke` — PayPal sandbox smoke test

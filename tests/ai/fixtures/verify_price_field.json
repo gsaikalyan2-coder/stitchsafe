@@ -1,0 +1,14 @@
+{
+  "verdicts": [
+    {
+      "itemId": "fabric_color",
+      "verdict": "MET",
+      "evidence": "Visible",
+      "imageRefs": [],
+      "feedbackForTailor": "",
+      "amountCents": 5000
+    }
+  ],
+  "notes": "",
+  "totalCents": 5000
+}

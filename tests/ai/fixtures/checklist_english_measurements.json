@@ -1,0 +1,82 @@
+{
+  "items": [
+    {
+      "id": "fabric_color",
+      "label_en": "White cotton fabric",
+      "label_local": "White cotton fabric",
+      "local_lang": "en",
+      "source_quote": "White cotton fabric",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "sleeve_style",
+      "label_en": "Full sleeves",
+      "label_local": "Full sleeves",
+      "local_lang": "en",
+      "source_quote": "full sleeves",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "collar_type",
+      "label_en": "Mandarin collar",
+      "label_local": "Mandarin collar",
+      "local_lang": "en",
+      "source_quote": "mandarin collar",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "fit_chest",
+      "label_en": "Chest measurement 40 inches",
+      "label_local": "Chest measurement 40 inches",
+      "local_lang": "en",
+      "source_quote": "Chest 40 inches",
+      "checkMethod": "fit"
+    },
+    {
+      "id": "fit_length",
+      "label_en": "Length measurement 42 inches",
+      "label_local": "Length measurement 42 inches",
+      "local_lang": "en",
+      "source_quote": "length 42 inches",
+      "checkMethod": "fit"
+    },
+    {
+      "id": "fit_sleeve",
+      "label_en": "Sleeve length 24 inches",
+      "label_local": "Sleeve length 24 inches",
+      "local_lang": "en",
+      "source_quote": "sleeve 24 inches",
+      "checkMethod": "fit"
+    },
+    {
+      "id": "embroidery_collar",
+      "label_en": "Simple gold embroidery on collar edge",
+      "label_local": "Simple gold embroidery on collar edge",
+      "local_lang": "en",
+      "source_quote": "simple gold embroidery on the collar edge",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "button_type",
+      "label_en": "White pearl buttons",
+      "label_local": "White pearl buttons",
+      "local_lang": "en",
+      "source_quote": "white pearl buttons",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "button_count",
+      "label_en": "7 buttons down the front",
+      "label_local": "7 buttons down the front",
+      "local_lang": "en",
+      "source_quote": "7 buttons down the front",
+      "checkMethod": "photo"
+    }
+  ],
+  "priceLineSuggestions": [
+    { "lineType": "BASE", "label": "Custom kurta stitching", "reason": "Main tailoring work" }
+  ],
+  "deadlineText": "3 weeks",
+  "deadlineDays": 21,
+  "ambiguities": []
+}

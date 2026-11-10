@@ -107,4 +107,4 @@ render.yaml
 
 ## Current phase
 
-Phase 4 — AI (not started)
+Phase 5 — Full flow + UI (not started)

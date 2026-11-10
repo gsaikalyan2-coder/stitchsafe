@@ -5,7 +5,18 @@
       "Bash(npm install:*)",
       "Bash(node -e \"const d=require\\(''''fs''''\\).readFileSync\\(''''/dev/stdin'''',''''utf8''''\\);const p=JSON.parse\\(d\\);console.log\\(JSON.stringify\\({...p.dependencies,...p.devDependencies},null,2\\)\\)\")",
       "Bash(node:*)",
-      "Bash(npm i:*)"
+      "Bash(npm i:*)",
+      "Bash(git:*)",
+      "Bash(npm ls:*)",
+      "Bash(curl -s \"https://ai.google.dev/api/generate-content\")",
+      "Bash(curl -s \"https://aistudio.google.com/api-reference/generate-content\")",
+      "Bash(curl -s \"https://ai.google.dev/gemini-api/docs/json-mode\")",
+      "Bash(curl -s \"https://aistudio.google.com/docs/structured-output\")",
+      "Bash(grep -r class.*Error node_modules/@google/genai/dist/*.js)",
+      "Bash(\"C:\\\\Users\\\\saika\\\\StitchSafe-PayTm\\\\docs\\\\handover_phase_4.md\":*)",
+      "Bash(\"C:\\\\Users\\\\saika\\\\StitchSafe-PayTm\\\\src\\\\server\\\\ai\\\\prompts\\\\checklist.txt\":*)",
+      "Bash(C:/Users/saika/StitchSafe-PayTm/src/server/ai/prompts/checklist.txt:*)",
+      "Bash(printf 'const fs = require\\(\"\"fs\"\"\\);\\\\nconst f = \"\"C:/Users/saika/StitchSafe-PayTm/src/server/ai/checklist.ts\"\";\\\\nlet c = fs.readFileSync\\(f, \"\"utf8\"\"\\);\\\\nc = c.replace\\(\\\\n  /^const MONEY_RE = .*$/m,\\\\n  \"\"const MONEY_RE = /\\\\\\\\\\\\\\\\d[\\\\\\\\\\\\\\\\d,.]*\\\\\\\\\\\\\\\\s*\\(?:[\\\\\\\\\\\\\\\\$\\\\\\\\\\\\\\\\u20B9]|USD|INR|Rs\\\\\\\\\\\\\\\\.?|rupees?|dollars?\\)|\\(?:[\\\\\\\\\\\\\\\\$\\\\\\\\\\\\\\\\u20B9]|USD|INR|Rs\\\\\\\\\\\\\\\\.?|rupees?|dollars?\\)\\\\\\\\\\\\\\\\s*\\\\\\\\\\\\\\\\d/i;\"\"\\\\n\\);\\\\nfs.writeFileSync\\(f, c\\);\\\\nconsole.log\\(\"\"regex fixed\"\"\\);\\\\n')"
     ]
   }
 }

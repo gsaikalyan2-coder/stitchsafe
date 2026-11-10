@@ -25,3 +25,8 @@ src/generated/
 
 # TypeScript incremental build info
 *.tsbuildinfo
+
+# AI smoke test photos (user-supplied; not committed)
+tests/ai/samples/photos/*.jpg
+tests/ai/samples/photos/*.jpeg
+tests/ai/samples/photos/*.png

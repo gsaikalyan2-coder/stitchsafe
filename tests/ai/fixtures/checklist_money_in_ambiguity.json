@@ -1,0 +1,18 @@
+{
+  "items": [
+    {
+      "id": "fabric_color",
+      "label_en": "White cotton fabric",
+      "label_local": "White cotton fabric",
+      "local_lang": "en",
+      "source_quote": "white cotton",
+      "checkMethod": "photo"
+    }
+  ],
+  "priceLineSuggestions": [],
+  "deadlineText": "",
+  "deadlineDays": null,
+  "ambiguities": [
+    "Customer mentioned 1500 rupees but price not confirmed"
+  ]
+}

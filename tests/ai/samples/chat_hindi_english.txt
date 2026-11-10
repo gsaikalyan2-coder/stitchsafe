@@ -1,0 +1,10 @@
+Customer: Bhai, mujhe ek sherwani chahiye shaadi ke liye. Dark maroon color, silk fabric.
+Tailor: Bilkul. Measurements batao.
+Customer: Chest 44, waist 38, length 46 inch chahiye.
+Tailor: Collar kaisa chahiye?
+Customer: Nehru collar. Aur full sleeves. Buttons gold color ke.
+Tailor: Gold buttons laga denge. Deadline kab hai?
+Customer: 15 din mein chahiye. Kitna cost hoga? 5000 mein ho jayega?
+Tailor: Pricing baad mein discuss karenge. Pehle design finalize karte hain.
+Customer: Lining bhi chahiye andar, smooth feel ke liye.
+Tailor: Haan, inner lining add kar denge.

@@ -1,0 +1,13 @@
+{
+  "added": [],
+  "modified": [
+    {
+      "id": "fabric_color",
+      "label_en": "White cotton material",
+      "reason": "Reworded from 'fabric' to 'material'"
+    }
+  ],
+  "removed": [],
+  "summary_en": "Minor wording update to fabric description.",
+  "summary_local": "Minor wording update to fabric description."
+}

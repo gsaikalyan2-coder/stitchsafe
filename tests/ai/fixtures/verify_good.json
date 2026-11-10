@@ -1,0 +1,36 @@
+{
+  "photoAssessments": [
+    {
+      "imageRef": "Image 1",
+      "unrelated": false,
+      "unrelatedReason": ""
+    },
+    {
+      "imageRef": "Image 2",
+      "unrelated": false,
+      "unrelatedReason": ""
+    }
+  ],
+  "verdicts": [
+    {
+      "itemId": "fabric_color",
+      "verdict": "MET",
+      "evidence": "Shirt appears white in all photos with no visible discolouration",
+      "imageRefs": [
+        "Image 1"
+      ],
+      "feedbackForTailor": ""
+    },
+    {
+      "itemId": "collar_type",
+      "verdict": "MET",
+      "evidence": "Mandarin collar clearly visible and correctly stitched",
+      "imageRefs": [
+        "Image 1",
+        "Image 2"
+      ],
+      "feedbackForTailor": ""
+    }
+  ],
+  "notes": "Overall finish looks clean."
+}

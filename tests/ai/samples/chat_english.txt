@@ -1,0 +1,10 @@
+Customer: Hi, I need a custom kurta made. White cotton fabric, full sleeves, mandarin collar.
+Tailor: Sure! What measurements do you need?
+Customer: Chest 40 inches, length 42 inches, sleeve 24 inches.
+Tailor: Got it. Any embroidery or special stitching?
+Customer: Yes, simple gold embroidery on the collar edge.
+Tailor: We can do that. Delivery in 3 weeks?
+Customer: That works. How much roughly? Around 1500 rupees?
+Tailor: We will discuss the price separately. The design sounds straightforward.
+Customer: Please make sure the buttons are white pearl buttons, 7 buttons down the front.
+Tailor: Noted. White pearl buttons, 7 front buttons.

@@ -1,0 +1,26 @@
+{
+  "items": [
+    {
+      "id": "fabric_color",
+      "label_en": "Fabric must be white cotton",
+      "label_local": "துணி வெள்ளை பருத்தி",
+      "local_lang": "ta",
+      "source_quote": "I want white cotton fabric",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "collar_type",
+      "label_en": "Mandarin collar",
+      "label_local": "மண்டரின் காலர்",
+      "local_lang": "ta",
+      "source_quote": "mandarin collar please",
+      "checkMethod": "photo"
+    }
+  ],
+  "priceLineSuggestions": [
+    { "lineType": "BASE", "label": "Custom shirt stitching", "reason": "Main tailoring work" }
+  ],
+  "deadlineText": "2 weeks from order date",
+  "deadlineDays": 14,
+  "ambiguities": []
+}

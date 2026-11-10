@@ -1,0 +1,24 @@
+{
+  "items": [
+    {
+      "id": "collar_and_sleeves",
+      "label_en": "Nehru collar and full sleeves",
+      "label_local": "Nehru collar and full sleeves",
+      "local_lang": "en",
+      "source_quote": "I want nehru collar and full sleeves",
+      "checkMethod": "photo"
+    },
+    {
+      "id": "fabric_color",
+      "label_en": "White cotton fabric",
+      "label_local": "White cotton fabric",
+      "local_lang": "en",
+      "source_quote": "white cotton",
+      "checkMethod": "photo"
+    }
+  ],
+  "priceLineSuggestions": [],
+  "deadlineText": "3 weeks",
+  "deadlineDays": 21,
+  "ambiguities": []
+}

@@ -341,8 +341,12 @@ export async function reauthorizeDue(now: Date): Promise<number> {
       );
 
       await prisma.$transaction(async (tx) => {
-        const history = Array.isArray(payment.authorizationHistory)
-          ? (payment.authorizationHistory as object[])
+        // Re-read inside TX: if another cron run already reauthorized, skip.
+        const freshPayment = await tx.payment.findUniqueOrThrow({ where: { id: payment.id } });
+        if (freshPayment.reauthorizedAt !== null) return;
+
+        const history = Array.isArray(freshPayment.authorizationHistory)
+          ? (freshPayment.authorizationHistory as object[])
           : [];
 
         await tx.payment.update({
@@ -368,6 +372,7 @@ export async function reauthorizeDue(now: Date): Promise<number> {
           orderId: payment.orderId,
           fromState: undefined,
           toState: "AUTHORIZED" as PrismaOrderState,
+          actorId: "SYSTEM",
           type: "PAYPAL_REAUTHORIZED",
           payload: {
             newAuthorizationId: result.authorizationId,

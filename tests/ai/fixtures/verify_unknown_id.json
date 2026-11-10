@@ -1,0 +1,28 @@
+{
+  "photoAssessments": [
+    {
+      "imageRef": "Image 1",
+      "unrelated": false,
+      "unrelatedReason": ""
+    }
+  ],
+  "verdicts": [
+    {
+      "itemId": "fabric_color",
+      "verdict": "MET",
+      "evidence": "Visible in photo",
+      "imageRefs": [
+        "Image 1"
+      ],
+      "feedbackForTailor": ""
+    },
+    {
+      "itemId": "unknown_item_xyz",
+      "verdict": "MET",
+      "evidence": "Some invented item",
+      "imageRefs": [],
+      "feedbackForTailor": ""
+    }
+  ],
+  "notes": ""
+}

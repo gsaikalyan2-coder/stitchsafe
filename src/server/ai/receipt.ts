@@ -8,7 +8,7 @@ import type { NeedsReview } from "./client";
 import { ReceiptSchema } from "./schemas";
 import type { ReceiptOutput, ChecklistItem } from "./schemas";
 
-const PROMPT = readFileSync(join(__dirname, "prompts/receipt.txt"), "utf8");
+const PROMPT = readFileSync(join(process.cwd(), "src/server/ai/prompts/receipt.txt"), "utf8");
 
 export async function writeReceipt(
   outcome: "RELEASED" | "VOIDED" | "CANCELLED",

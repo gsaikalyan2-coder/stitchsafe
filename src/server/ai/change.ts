@@ -6,7 +6,7 @@ import type { NeedsReview } from "./client";
 import { ChangeSchema } from "./schemas";
 import type { ChangeOutput, ChecklistItem } from "./schemas";
 
-const PROMPT = readFileSync(join(__dirname, "prompts/change.txt"), "utf8");
+const PROMPT = readFileSync(join(process.cwd(), "src/server/ai/prompts/change.txt"), "utf8");
 
 export async function writeChange(
   previousItems: ChecklistItem[],

@@ -7,7 +7,7 @@ import type { NeedsReview } from "./client";
 import { VerifySchema } from "./schemas";
 import type { VerifyOutput, ChecklistItem, PhotosRejectedUnrelated } from "./schemas";
 
-const PROMPT = readFileSync(join(__dirname, "prompts/verify.txt"), "utf8");
+const PROMPT = readFileSync(join(process.cwd(), "src/server/ai/prompts/verify.txt"), "utf8");
 
 export async function verifyPhotos(
   checklistItems: ChecklistItem[],

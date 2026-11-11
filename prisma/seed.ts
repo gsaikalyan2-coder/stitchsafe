@@ -16,14 +16,14 @@ async function main() {
 
   const tailor = await prisma.user.upsert({
     where: { email: tailorEmail },
-    update: { role: "TAILOR", roleChosen: true },
-    create: { email: tailorEmail, name: "Demo Tailor", role: "TAILOR", roleChosen: true },
+    update: { role: "TAILOR", name: "Sri Karthika Tailors", roleChosen: true, phoneVerified: true },
+    create: { email: tailorEmail, name: "Sri Karthika Tailors", role: "TAILOR", roleChosen: true, phoneVerified: true },
   })
 
   const customer = await prisma.user.upsert({
     where: { email: customerEmail },
-    update: { role: "CUSTOMER", roleChosen: true },
-    create: { email: customerEmail, name: "Demo Customer", role: "CUSTOMER", roleChosen: true },
+    update: { role: "CUSTOMER", name: "Priya Sundaram", roleChosen: true, phoneVerified: true },
+    create: { email: customerEmail, name: "Priya Sundaram", role: "CUSTOMER", roleChosen: true, phoneVerified: true },
   })
 
   console.log("Seeded tailor:", tailor.email)

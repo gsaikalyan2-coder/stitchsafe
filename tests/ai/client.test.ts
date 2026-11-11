@@ -28,6 +28,7 @@ vi.mock("@google/genai", () => ({
     (this as { models: unknown }).models = { generateContent: mockGenerateContent };
   }),
   ApiError: MockApiError,
+  ThinkingLevel: { LOW: "LOW", HIGH: "HIGH", MEDIUM: "MEDIUM" },
 }));
 
 // Import after mock

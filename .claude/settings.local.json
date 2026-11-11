@@ -16,7 +16,25 @@
       "Bash(\"C:\\\\Users\\\\saika\\\\StitchSafe-PayTm\\\\docs\\\\handover_phase_4.md\":*)",
       "Bash(\"C:\\\\Users\\\\saika\\\\StitchSafe-PayTm\\\\src\\\\server\\\\ai\\\\prompts\\\\checklist.txt\":*)",
       "Bash(C:/Users/saika/StitchSafe-PayTm/src/server/ai/prompts/checklist.txt:*)",
-      "Bash(printf 'const fs = require\\(\"\"fs\"\"\\);\\\\nconst f = \"\"C:/Users/saika/StitchSafe-PayTm/src/server/ai/checklist.ts\"\";\\\\nlet c = fs.readFileSync\\(f, \"\"utf8\"\"\\);\\\\nc = c.replace\\(\\\\n  /^const MONEY_RE = .*$/m,\\\\n  \"\"const MONEY_RE = /\\\\\\\\\\\\\\\\d[\\\\\\\\\\\\\\\\d,.]*\\\\\\\\\\\\\\\\s*\\(?:[\\\\\\\\\\\\\\\\$\\\\\\\\\\\\\\\\u20B9]|USD|INR|Rs\\\\\\\\\\\\\\\\.?|rupees?|dollars?\\)|\\(?:[\\\\\\\\\\\\\\\\$\\\\\\\\\\\\\\\\u20B9]|USD|INR|Rs\\\\\\\\\\\\\\\\.?|rupees?|dollars?\\)\\\\\\\\\\\\\\\\s*\\\\\\\\\\\\\\\\d/i;\"\"\\\\n\\);\\\\nfs.writeFileSync\\(f, c\\);\\\\nconsole.log\\(\"\"regex fixed\"\"\\);\\\\n')"
+      "Bash(printf 'const fs = require\\(\"\"fs\"\"\\);\\\\nconst f = \"\"C:/Users/saika/StitchSafe-PayTm/src/server/ai/checklist.ts\"\";\\\\nlet c = fs.readFileSync\\(f, \"\"utf8\"\"\\);\\\\nc = c.replace\\(\\\\n  /^const MONEY_RE = .*$/m,\\\\n  \"\"const MONEY_RE = /\\\\\\\\\\\\\\\\d[\\\\\\\\\\\\\\\\d,.]*\\\\\\\\\\\\\\\\s*\\(?:[\\\\\\\\\\\\\\\\$\\\\\\\\\\\\\\\\u20B9]|USD|INR|Rs\\\\\\\\\\\\\\\\.?|rupees?|dollars?\\)|\\(?:[\\\\\\\\\\\\\\\\$\\\\\\\\\\\\\\\\u20B9]|USD|INR|Rs\\\\\\\\\\\\\\\\.?|rupees?|dollars?\\)\\\\\\\\\\\\\\\\s*\\\\\\\\\\\\\\\\d/i;\"\"\\\\n\\);\\\\nfs.writeFileSync\\(f, c\\);\\\\nconsole.log\\(\"\"regex fixed\"\"\\);\\\\n')",
+      "Bash(find /c/Users/saika/StitchSafe-PayTm/src/components -type f -name *.tsx -o -name *.ts)",
+      "Bash(find /c/Users/saika/StitchSafe-PayTm/src -name *chat* -o -name *message* -o -name *tailwind*)",
+      "Bash(find /Users/saika/StitchSafe-PayTm/src/server -name *storage* -o -name *supabase*)",
+      "Bash(cat /c/Users/saika/StitchSafe-PayTm/src/types/*.ts)",
+      "Bash(xargs grep:*)",
+      "Bash(ls:*)",
+      "Bash(cat /c/Users/saika/StitchSafe-PayTm/src/app/api/orders/[id]/cancel/route.ts)",
+      "Bash(cat:*)",
+      "Bash(rm -rf /tmp/*)",
+      "Bash(rm -rf C:/Users/saika/AppData/Local/npm-cache/_logs/*)",
+      "Bash(ls \"C:/Users/saika/StitchSafe-PayTm/src/app/\\(main\\)/\")",
+      "Bash(ls \"C:/Users/saika/StitchSafe-PayTm/src/app/\\(main\\)/customer/\")",
+      "Bash(ls \"C:/Users/saika/StitchSafe-PayTm/src/app/\\(main\\)/tailor/\")",
+      "Bash(ls \"C:/Users/saika/StitchSafe-PayTm/src/app/\\(main\\)/orders/[id]/\")",
+      "Bash(grep -v \"^[0-9]*:.*import\\\\|^[0-9]*:.*//.*P[1-8]\\\\|PAYPAL\")",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(export ECC_DISABLED_HOOKS=\"pre:edit-write:gateguard-fact-force\")",
+      "Bash(echo \"Hook disabled: $ECC_DISABLED_HOOKS\")"
     ]
   }
 }

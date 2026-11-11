@@ -123,7 +123,7 @@ export function canActorTransition(
 
   switch (to) {
     case OrderState.PROPOSED:
-      return actor === 'TAILOR' || actor === 'CUSTOMER'
+      return actor === 'TAILOR'
 
     case OrderState.AGREED:
       // System records agreement after both parties accept the checklist version

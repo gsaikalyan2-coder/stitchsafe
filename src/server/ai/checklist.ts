@@ -1,23 +1,27 @@
 // src/server/ai/checklist.ts
 import { readFileSync } from "fs";
 import { join } from "path";
-import { generateJson, FAST_MODEL } from "./client";
-import type { NeedsReview } from "./client";
+import { generateJson, FAST_MODEL, VISION_MODEL } from "./client";
+import type { NeedsReview, Part } from "./client";
 import { ChecklistSchema } from "./schemas";
 import type { ChecklistOutput } from "./schemas";
 
-const PROMPT = readFileSync(join(__dirname, "prompts/checklist.txt"), "utf8");
+const PROMPT = readFileSync(join(process.cwd(), "src/server/ai/prompts/checklist.txt"), "utf8");
 
 // Matches digits adjacent to currency words/symbols
 const MONEY_RE = /\d[\d,.]*\s*(?:[\$\u20B9]|USD|INR|Rs\.?|rupees?|dollars?)|(?:[\$\u20B9]|USD|INR|Rs\.?|rupees?|dollars?)\s*\d/i;
 
 export async function buildChecklist(
   chatHistory: string,
+  imageParts?: Part[],
 ): Promise<ChecklistOutput | NeedsReview> {
+  const hasImages = imageParts && imageParts.length > 0;
+  const textPart: Part = { text: `Chat history:\n${chatHistory}` };
+  const parts: Part[] = hasImages ? [...imageParts, textPart] : [textPart];
+
   const result = await generateJson({
-    model: FAST_MODEL(),
-    parts: [{ text: `Chat history:
-${chatHistory}` }],
+    model: hasImages ? VISION_MODEL() : FAST_MODEL(),
+    parts,
     schema: ChecklistSchema,
     system: PROMPT,
   });

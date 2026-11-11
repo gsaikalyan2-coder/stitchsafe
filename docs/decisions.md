@@ -20,6 +20,34 @@
 - Authorize at agreement. Reauthorize after the 3-day honor period via cron; authorization max 29 days.
 - Sandbox authorizations do not expire; test expiry with negative testing and explain in README.
 
+## Phase 5 decisions (Nov 10 2026)
+
+P1 Currency: USD only, everywhere in UI. Display via formatCents. No ₹ or other currency.
+P2 Price changes: the AI ("Change assistant") only drafts scope diffs (added/modified/removed items, summary_en, summary_local) via change.ts. The TAILOR types every price line (cents, via pricing.ts). Customer accepts -> add-on authorization. AI never proposes, suggests, or displays a number. No "negotiation bot" wording in UI.
+P3 Checklist acceptance: both parties accept the SAME checklist version. First acceptance records acceptance on that version; the second acceptance transitions PROPOSED -> AGREED. Any edit creates a new version and clears both acceptances.
+P4 Tailor dashboard stage groups (display only, derived from state): Pending payment = AGREED; In progress = AUTHORIZED, IN_PROGRESS; Under check = SUBMITTED, CHECK_FAILED, CHECK_PASSED; Delivered = SHIPPED; Released = RELEASED; Revised payment = badge (not group) on any order with a live add-on authorization; Closed = CANCELLED, VOIDED; Disputed = DISPUTED (own group, highlighted).
+P5 Progress notes: tailor may post free-text progress notes (max 500 chars) on AUTHORIZED / IN_PROGRESS orders. Stored as OrderEvent type PROGRESS_NOTE. NO state change, no money, no AI. Shown on customer tracking timeline.
+P6 Receipt: AI receipt.ts writes text only. All amounts, dates and times on the receipt come from server records (price lines, authorizations, captures, voids) rendered in a separate table. Never parse amounts from AI text.
+P7 Roles: a user's role is per order (customerId / tailorId on Order). A user may be customer on one order and tailor on another. Dashboards: /customer shows orders where user is customer; /tailor where user is tailor. Every orderService entry point verifies the session user is the correct party for that action, server-side.
+P8 Deadline: dueDate = agreedAt + deadlineDays (computed server-side at AGREED, stored). Overdue = now > dueDate and state not in {SHIPPED, RELEASED, CANCELLED, VOIDED}.
+
+## Phase 5b decisions — P9-P12 flow changes (Nov 10 2026)
+
+P9 Customer creates orders: customer creates order with tailor email, description, 1-5 reference photos (EXIF strip + resize via images.ts, stored as Photo with kind REFERENCE). buildChecklist uses description AND reference photos (vision model).
+P10 Customer edits checklist in DRAFT: edit text, change checkMethod (photo/fit), delete, add item, "Regenerate with AI". Each save = new checklist version. "Send to tailor" appends SENT_TO_TAILOR event, stays DRAFT.
+P11 Tailor proposes after SENT_TO_TAILOR: tailor sees checklist + reference photos, sets price lines, clicks Propose (DRAFT→PROPOSED). Only TAILOR can transition to PROPOSED (actor rule updated). Customer in PROPOSED: "Accept" (P3 logic) or "Request changes" (new version, clears acceptances, stays PROPOSED, CHANGES_REQUESTED event; tailor must re-check price and re-propose/accept).
+P12 Reference vs finished photos: tailor photo uploader labelled "Upload finished work" (Photo kind FINISHED). verify.ts grades FINISHED photos. Both sides see Reference vs Finished work side by side with per-item AI results.
+
+Price input UX: dollars field + -$1/+$1/+$2 stepper buttons. Clamp at $0 min. Integer cents in React state via pricing.ts.
+
+Permissions summary:
+- createOrder: customer only.
+- checklist edit / regenerate / send-to-tailor: customer only, DRAFT or PROPOSED.
+- price lines / propose: tailor only.
+- PROPOSED → PROPOSED (request changes): customer only in PROPOSED.
+
+Photo model: added `kind` enum (REFERENCE, FINISHED) with default FINISHED for backward compat.
+
 ## Pricing math
 - Integer cents. discount = floor((baseCents * bps + 5000) / 10000)  (round half up).
 - total = base + rush + shipping + customs - discount.

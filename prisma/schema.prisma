@@ -26,9 +26,10 @@ model User {
   sessions       Session[]
   tailorOrders   Order[]      @relation("TailorOrders")
   customerOrders Order[]      @relation("CustomerOrders")
-  sentMessages   Message[]
-  events         OrderEvent[]
-  photos         Photo[]
+  sentMessages     Message[]
+  events           OrderEvent[]
+  photos           Photo[]
+  fitConfirmations FitConfirmation[]
 }
 
 model Account {
@@ -72,18 +73,23 @@ model VerificationToken {
 // ── Domain ──────────────────────────────────────────────────────────────────
 
 model Order {
-  id              String     @id @default(cuid())
-  tailorId        String
-  customerId      String
-  state           OrderState @default(DRAFT)
-  totalCents      Int        @default(0)
-  discountApplied Boolean    @default(false)
-  discountBps     Int        @default(1000)
-  checkRound      Int        @default(0)
-  shippedAt       DateTime?
-  fitConfirmedAt  DateTime?
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
+  id                String     @id @default(cuid())
+  tailorId          String
+  customerId        String
+  state             OrderState @default(DRAFT)
+  totalCents        Int        @default(0)
+  discountApplied   Boolean    @default(false)
+  discountBps       Int        @default(1000)
+  checkRound        Int        @default(0)
+  dueDate           DateTime?
+  deadlineDays      Int?
+  agreedAt          DateTime?
+  acceptAnyway      Boolean    @default(false)
+  needsManualReview Boolean    @default(false)
+  shippedAt         DateTime?
+  fitConfirmedAt    DateTime?
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
 
   tailor   User @relation("TailorOrders", fields: [tailorId], references: [id])
   customer User @relation("CustomerOrders", fields: [customerId], references: [id])
@@ -93,6 +99,9 @@ model Order {
   payments          Payment[]
   messages          Message[]
   photos            Photo[]
+  changeRequests    ChangeRequest[]
+  priceLines        PriceLine[]
+  fitConfirmations  FitConfirmation[]
 }
 
 model OrderEvent {
@@ -111,13 +120,13 @@ model OrderEvent {
 }
 
 model ChecklistVersion {
-  id               String   @id @default(cuid())
-  orderId          String
-  version          Int
-  items            Json
-  tailorAccepted   Boolean  @default(false)
-  customerAccepted Boolean  @default(false)
-  createdAt        DateTime @default(now())
+  id                 String    @id @default(cuid())
+  orderId            String
+  version            Int
+  items              Json
+  tailorAcceptedAt   DateTime?
+  customerAcceptedAt DateTime?
+  createdAt          DateTime  @default(now())
 
   order Order @relation(fields: [orderId], references: [id])
 
@@ -160,15 +169,53 @@ model Message {
 }
 
 model Photo {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   orderId     String
   uploaderId  String
   storagePath String
-  round       Int      @default(0)
-  createdAt   DateTime @default(now())
+  kind        PhotoKind @default(FINISHED)
+  round       Int       @default(0)
+  createdAt   DateTime  @default(now())
 
   order    Order @relation(fields: [orderId], references: [id])
   uploader User  @relation(fields: [uploaderId], references: [id])
+}
+
+model FitConfirmation {
+  id         String   @id @default(cuid())
+  orderId    String
+  itemId     String
+  customerId String
+  confirmedAt DateTime @default(now())
+
+  order    Order @relation(fields: [orderId], references: [id])
+  customer User  @relation(fields: [customerId], references: [id])
+
+  @@unique([orderId, itemId])
+}
+
+model ChangeRequest {
+  id         String       @id @default(cuid())
+  orderId    String
+  changeDiff Json
+  status     ChangeStatus @default(PENDING_PRICE)
+  createdAt  DateTime     @default(now())
+
+  order      Order       @relation(fields: [orderId], references: [id])
+  priceLines PriceLine[]
+}
+
+model PriceLine {
+  id              String        @id @default(cuid())
+  orderId         String
+  changeRequestId String?
+  kind            PriceLineKind
+  label           String
+  amountCents     Int
+  createdAt       DateTime      @default(now())
+
+  order         Order          @relation(fields: [orderId], references: [id])
+  changeRequest ChangeRequest? @relation(fields: [changeRequestId], references: [id])
 }
 
 // ── Enums ───────────────────────────────────────────────────────────────────
@@ -212,4 +259,24 @@ enum MessageRole {
   USER
   ASSISTANT
   SYSTEM
+}
+
+enum ChangeStatus {
+  PENDING_PRICE
+  PRICED
+  ACCEPTED
+  REJECTED
+}
+
+enum PhotoKind {
+  REFERENCE
+  FINISHED
+}
+
+enum PriceLineKind {
+  BASE
+  RUSH
+  SHIPPING
+  CUSTOMS
+  ADDON
 }

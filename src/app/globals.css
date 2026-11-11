@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #3730A3;
+  --color-primary-light: #4338CA;
+  --color-paypal: #0070E0;
+  --color-held: #059669;
+  --color-released: #10B981;
+  --color-warning: #D97706;
+  --color-dispute: #E11D48;
+  --color-surface: #F8FAFC;
+  --color-card: #FFFFFF;
+}

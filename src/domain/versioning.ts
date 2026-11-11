@@ -1,16 +1,16 @@
 export interface ChecklistVersion {
   version: number
-  tailorAccepted: boolean
-  customerAccepted: boolean
+  tailorAcceptedAt: Date | null
+  customerAcceptedAt: Date | null
 }
 
 export function isAccepted(v: ChecklistVersion): boolean {
-  return v.tailorAccepted && v.customerAccepted
+  return v.tailorAcceptedAt !== null && v.customerAcceptedAt !== null
 }
 
 export function needsAcceptance(v: ChecklistVersion, role: 'tailor' | 'customer'): boolean {
-  if (role === 'tailor') return !v.tailorAccepted
-  return !v.customerAccepted
+  if (role === 'tailor') return v.tailorAcceptedAt === null
+  return v.customerAcceptedAt === null
 }
 
 export function bumpVersion(current: number): number {

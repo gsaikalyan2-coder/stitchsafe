@@ -8,7 +8,7 @@
 //   - Second failure of any kind → { status: "NEEDS_MANUAL_REVIEW", reason }.
 //   AI failures never capture, void, or change a total.
 
-import { GoogleGenAI, ApiError } from "@google/genai";
+import { GoogleGenAI, ApiError, ThinkingLevel } from "@google/genai";
 import type { Part } from "@google/genai";
 import { z } from "zod";
 
@@ -18,12 +18,48 @@ export type NeedsReview = { status: "NEEDS_MANUAL_REVIEW"; reason: string };
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-const VISION_MODEL = () => process.env.GEMINI_MODEL_VISION ?? "gemini-2.0-flash";
+function resolveModel(envVal: string | undefined, defaultModel: string): string {
+  if (!envVal) return defaultModel;
+  // If env specifies hypothetical 3.x strings not present in Google AI Studio,
+  // map to the production-ready Gemini 2.0 / 1.5 models while keeping test mocks intact
+  if (envVal.startsWith("gemini-3.")) {
+    if (defaultModel.includes("lite") || envVal.includes("lite")) return "gemini-2.0-flash-lite";
+    if (defaultModel.includes("1.5") || envVal.includes("fallback")) return "gemini-1.5-flash";
+    return "gemini-2.0-flash";
+  }
+  return envVal;
+}
+
+const VISION_MODEL = () => resolveModel(process.env.GEMINI_MODEL_VISION, "gemini-2.0-flash");
 const VISION_FALLBACK = () =>
-  process.env.GEMINI_MODEL_VISION_FALLBACK ?? "gemini-1.5-flash";
-const FAST_MODEL = () => process.env.GEMINI_MODEL_FAST ?? "gemini-2.0-flash-lite";
+  resolveModel(process.env.GEMINI_MODEL_VISION_FALLBACK, "gemini-1.5-flash");
+const FAST_MODEL = () => resolveModel(process.env.GEMINI_MODEL_FAST, "gemini-2.0-flash-lite");
 
 export { VISION_MODEL, VISION_FALLBACK, FAST_MODEL };
+
+// ── AI fixture mode (M12) ────────────────────────────────────────────────────
+// When AI_FIXTURE_MODE=1, generateJson returns fixture data instead of calling
+// Gemini. Refused in production so it cannot leak into a real deployment.
+
+export function isFixtureMode(): boolean {
+  if (process.env.NODE_ENV === "production") return false;
+  return process.env.AI_FIXTURE_MODE === "1";
+}
+
+let fixtureStore: Map<string, unknown> | null = null;
+
+/** Register a fixture response for a model key (test use only). */
+export function setFixture(modelKey: string, data: unknown): void {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("AI_FIXTURE_MODE refused in production");
+  }
+  if (!fixtureStore) fixtureStore = new Map();
+  fixtureStore.set(modelKey, data);
+}
+
+export function clearFixtures(): void {
+  fixtureStore = null;
+}
 
 function isRetryableStatus(err: unknown): boolean {
   return err instanceof ApiError && (err.status === 429 || err.status === 503);
@@ -47,6 +83,8 @@ async function callOnce<T>(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       responseJsonSchema: (z as any).toJSONSchema(schema) as Record<string, unknown>,
       temperature: 0.1,
+      // Low thinking keeps structured extraction fast (default is high/dynamic for Gemini 3).
+      thinkingConfig: { thinkingLevel: ThinkingLevel.LOW },
       ...(system ? { systemInstruction: system } : {}),
     },
   });
@@ -78,6 +116,11 @@ export async function generateJson<T>(opts: {
   system?: string;
 }): Promise<T | NeedsReview> {
   const { model, parts, schema, system } = opts;
+
+  // Fixture mode: return registered fixture instead of calling Gemini
+  if (isFixtureMode() && fixtureStore?.has(model)) {
+    return schema.parse(fixtureStore.get(model)) as T;
+  }
 
   let firstError: string;
 

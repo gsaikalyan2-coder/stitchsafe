@@ -106,8 +106,8 @@ describe('canActorTransition — allowed actors', () => {
   it('TAILOR can propose (DRAFT → PROPOSED)', () => {
     expect(canActorTransition(OrderState.DRAFT, OrderState.PROPOSED, 'TAILOR')).toBe(true)
   })
-  it('CUSTOMER can propose (DRAFT → PROPOSED)', () => {
-    expect(canActorTransition(OrderState.DRAFT, OrderState.PROPOSED, 'CUSTOMER')).toBe(true)
+  it('CUSTOMER cannot propose (DRAFT → PROPOSED) — P11: only TAILOR proposes', () => {
+    expect(canActorTransition(OrderState.DRAFT, OrderState.PROPOSED, 'CUSTOMER')).toBe(false)
   })
   it('SYSTEM records agreement (PROPOSED → AGREED)', () => {
     expect(canActorTransition(OrderState.PROPOSED, OrderState.AGREED, 'SYSTEM')).toBe(true)

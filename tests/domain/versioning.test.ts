@@ -1,39 +1,41 @@
 import { describe, it, expect } from 'vitest'
 import { isAccepted, needsAcceptance, bumpVersion, diffChecklist } from '../../src/domain/versioning'
 
+const NOW = new Date('2026-11-10T12:00:00Z')
+
 describe('isAccepted', () => {
   it('true when both sides accepted', () => {
-    expect(isAccepted({ version: 1, tailorAccepted: true, customerAccepted: true })).toBe(true)
+    expect(isAccepted({ version: 1, tailorAcceptedAt: NOW, customerAcceptedAt: NOW })).toBe(true)
   })
 
   it('false when only tailor accepted', () => {
-    expect(isAccepted({ version: 1, tailorAccepted: true, customerAccepted: false })).toBe(false)
+    expect(isAccepted({ version: 1, tailorAcceptedAt: NOW, customerAcceptedAt: null })).toBe(false)
   })
 
   it('false when only customer accepted', () => {
-    expect(isAccepted({ version: 1, tailorAccepted: false, customerAccepted: true })).toBe(false)
+    expect(isAccepted({ version: 1, tailorAcceptedAt: null, customerAcceptedAt: NOW })).toBe(false)
   })
 
   it('false when neither accepted', () => {
-    expect(isAccepted({ version: 1, tailorAccepted: false, customerAccepted: false })).toBe(false)
+    expect(isAccepted({ version: 1, tailorAcceptedAt: null, customerAcceptedAt: null })).toBe(false)
   })
 })
 
 describe('needsAcceptance', () => {
-  it('tailor needs acceptance when tailorAccepted is false', () => {
-    expect(needsAcceptance({ version: 1, tailorAccepted: false, customerAccepted: true }, 'tailor')).toBe(true)
+  it('tailor needs acceptance when not yet accepted', () => {
+    expect(needsAcceptance({ version: 1, tailorAcceptedAt: null, customerAcceptedAt: NOW }, 'tailor')).toBe(true)
   })
 
   it('tailor does not need acceptance when already accepted', () => {
-    expect(needsAcceptance({ version: 1, tailorAccepted: true, customerAccepted: false }, 'tailor')).toBe(false)
+    expect(needsAcceptance({ version: 1, tailorAcceptedAt: NOW, customerAcceptedAt: null }, 'tailor')).toBe(false)
   })
 
-  it('customer needs acceptance when customerAccepted is false', () => {
-    expect(needsAcceptance({ version: 1, tailorAccepted: true, customerAccepted: false }, 'customer')).toBe(true)
+  it('customer needs acceptance when not yet accepted', () => {
+    expect(needsAcceptance({ version: 1, tailorAcceptedAt: NOW, customerAcceptedAt: null }, 'customer')).toBe(true)
   })
 
   it('customer does not need acceptance when already accepted', () => {
-    expect(needsAcceptance({ version: 1, tailorAccepted: false, customerAccepted: true }, 'customer')).toBe(false)
+    expect(needsAcceptance({ version: 1, tailorAcceptedAt: null, customerAcceptedAt: NOW }, 'customer')).toBe(false)
   })
 })
 

@@ -17,7 +17,7 @@ export async function proxy(req: NextRequest): Promise<NextResponse | undefined>
     const current = await auth()
     if (current?.user) {
       const dashboardUrl = req.nextUrl.clone()
-      dashboardUrl.pathname = "/dashboard"
+      dashboardUrl.pathname = current.user.role === "TAILOR" ? "/tailor" : "/customer"
       dashboardUrl.search = ""
       return NextResponse.redirect(dashboardUrl)
     }

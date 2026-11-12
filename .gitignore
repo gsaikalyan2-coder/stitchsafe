@@ -19,8 +19,7 @@ coverage/
 firebase-sa.json
 *-firebase-adminsdk-*.json
 
-# Prisma generated client (run npm run db:generate to rebuild)
-src/generated/
+# Prisma
 .prisma/
 
 # TypeScript incremental build info
